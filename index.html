@@ -4,156 +4,57 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Attendance Calculator</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      position: relative;
-      width: 500px;
-      height: 500px;
-      margin: 0 auto;
-      background: #fff;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-    .title {
-      position: absolute;
-      top: 25px;
-      left: 65px;
-      width: 380px;
-      height: 35px;
-      font-size: 21px;
-      font-weight: bold;
-      line-height: 35px;
-    }
-    label {
-      position: absolute;
-      left: 60px;
-      width: 150px;
-      height: 30px;
-      line-height: 30px;
-    }
-    #totalLabel { top: 100px; }
-    #absentLabel { top: 150px; }
-    input[type="text"] {
-      position: absolute;
-      left: 220px;
-      width: 180px;
-      height: 30px;
-      padding: 4px 6px;
-      box-sizing: border-box;
-      font-size: 14px;
-    }
-    #totalField { top: 100px; }
-    #absentField { top: 150px; }
-    button {
-      position: absolute;
-      top: 210px;
-      width: 120px;
-      height: 35px;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    #calculateButton { left: 100px; }
-    #clearButton { left: 250px; }
-    .result {
-      position: absolute;
-      left: 60px;
-      width: 350px;
-      height: 30px;
-      line-height: 30px;
-    }
-    #attendedResult { top: 280px; }
-    #percentageResult { top: 320px; }
-    #leaveResult { top: 360px; }
-    #message {
-      position: absolute;
-      top: 410px;
-      left: 60px;
-      width: 380px;
-      height: 30px;
-      line-height: 30px;
-      font-weight: bold;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <div class="title">Student Attendance Calculator</div>
+  <main class="page">
+    <section class="calculator" aria-labelledby="app-title">
+      <header class="header">
+        <h1 id="app-title">Student Attendance Calculator</h1>
+        <p class="subtitle">Calculate your attendance and remaining leave allowance</p>
+      </header>
 
-    <label id="totalLabel" for="totalField">Total Classes:</label>
-    <input type="text" id="totalField">
+      <section class="input-section" aria-label="Attendance inputs">
+        <div class="input-grid">
+          <div class="field">
+            <label for="totalClasses">Total Classes</label>
+            <input type="number" id="totalClasses" name="totalClasses" inputmode="numeric" min="1" step="1" placeholder="e.g. 100">
+          </div>
+          <div class="field">
+            <label for="absentClasses">Absent Classes</label>
+            <input type="number" id="absentClasses" name="absentClasses" inputmode="numeric" min="0" step="1" placeholder="e.g. 20">
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" id="calculateBtn" class="btn btn-primary">Calculate Attendance</button>
+          <button type="button" id="clearBtn" class="btn btn-secondary">Clear</button>
+        </div>
+        <p id="statusMessage" class="status-message" aria-live="polite"></p>
+      </section>
 
-    <label id="absentLabel" for="absentField">Absent Classes:</label>
-    <input type="text" id="absentField">
+      <section class="results-section" aria-label="Attendance results">
+        <div class="results-grid">
+          <article class="card">
+            <h2 class="card-label">Attended Classes</h2>
+            <p id="attendedResult" class="card-value">-</p>
+          </article>
+          <article class="card">
+            <h2 class="card-label">Absent Classes</h2>
+            <p id="absentResult" class="card-value">-</p>
+          </article>
+          <article class="card card-highlight">
+            <h2 class="card-label">Attendance Percentage</h2>
+            <p id="percentageResult" class="card-value percentage-value">-</p>
+          </article>
+          <article class="card">
+            <h2 class="card-label">Additional Leaves Allowed</h2>
+            <p id="leavesResult" class="card-value">-</p>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
 
-    <button id="calculateButton">Calculate</button>
-    <button id="clearButton">Clear</button>
-
-    <div id="attendedResult" class="result">Attended Classes: </div>
-    <div id="percentageResult" class="result">Attendance Percentage: </div>
-    <div id="leaveResult" class="result">Additional Leaves Allowed: </div>
-    <div id="message"></div>
-  </div>
-
-  <script>
-    const totalField = document.getElementById('totalField');
-    const absentField = document.getElementById('absentField');
-    const attendedResult = document.getElementById('attendedResult');
-    const percentageResult = document.getElementById('percentageResult');
-    const leaveResult = document.getElementById('leaveResult');
-    const message = document.getElementById('message');
-
-    document.getElementById('calculateButton').addEventListener('click', function () {
-      const totalStr = totalField.value.trim();
-      const absentStr = absentField.value.trim();
-
-      if (totalStr === '' || absentStr === '' || !/^[-+]?\d+$/.test(totalStr) || !/^[-+]?\d+$/.test(absentStr)) {
-        alert('Please enter numbers only.');
-        return;
-      }
-
-      const total = parseInt(totalStr, 10);
-      const absent = parseInt(absentStr, 10);
-
-      if (total <= 0 || absent < 0 || absent > total) {
-        alert('Please enter valid class numbers.');
-        return;
-      }
-
-      const attended = total - absent;
-      const percentage = (attended * 100.0) / total;
-      let additionalLeaves = Math.floor(attended / 0.75) - total;
-      if (additionalLeaves < 0) {
-        additionalLeaves = 0;
-      }
-
-      attendedResult.textContent = 'Attended Classes: ' + attended;
-      percentageResult.textContent = 'Attendance Percentage: ' + percentage.toFixed(2) + '%';
-      leaveResult.textContent = 'Additional Leaves Allowed: ' + additionalLeaves;
-
-      if (percentage < 75) {
-        message.textContent = 'Warning: Attendance is below 75%!';
-        message.style.color = 'red';
-      } else {
-        message.textContent = 'Good! You meet the 75% requirement.';
-        message.style.color = 'rgb(0, 128, 0)';
-      }
-    });
-
-    document.getElementById('clearButton').addEventListener('click', function () {
-      totalField.value = '';
-      absentField.value = '';
-      attendedResult.textContent = 'Attended Classes: ';
-      percentageResult.textContent = 'Attendance Percentage: ';
-      leaveResult.textContent = 'Additional Leaves Allowed: ';
-      message.textContent = '';
-      message.style.color = '';
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
