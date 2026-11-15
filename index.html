@@ -3,57 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Attendance Calculator</title>
+  <title>Attendly | Student Attendance Calculator</title>
+  <meta name="description" content="Attendly helps students calculate attendance, track percentage, and understand remaining leave allowance.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="page">
-    <section class="calculator" aria-labelledby="app-title">
-      <header class="header">
-        <h1 id="app-title">Student Attendance Calculator</h1>
-        <p class="subtitle">Calculate your attendance and remaining leave allowance</p>
-      </header>
+  <div class="app-bg"></div>
 
-      <section class="input-section" aria-label="Attendance inputs">
+  <header class="top-nav" id="dashboard">
+    <div class="nav-inner">
+      <a class="brand" href="#dashboard" aria-label="Attendly home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="18" height="18" rx="6" fill="currentColor" opacity="0.18"/>
+            <path d="M8 12.5L10.7 15.2L16.5 9.4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand-text">Attendly</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#calculator">Calculator</a>
+        <a href="#about">About</a>
+      </nav>
+
+      <button class="icon-btn" type="button" aria-label="Profile and settings">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5Z" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Student Productivity Dashboard</p>
+        <h1>Track attendance with clarity and confidence.</h1>
+        <p class="hero-subtitle">A refined attendance overview and calculator to help you stay above the 75% requirement and plan your leaves intelligently.</p>
+      </div>
+      <div class="hero-overview glass-card">
+        <div class="overview-header">
+          <span class="overview-label">Attendance Overview</span>
+          <span id="overviewStatusPill" class="status-pill neutral">Awaiting input</span>
+        </div>
+        <div class="ring-wrap">
+          <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
+            <circle class="ring-bg" cx="60" cy="60" r="52"></circle>
+            <circle id="progressRing" class="ring-progress" cx="60" cy="60" r="52"></circle>
+          </svg>
+          <div class="ring-center">
+            <div id="ringPercentage" class="ring-percentage">--%</div>
+            <div class="ring-caption">Attendance</div>
+          </div>
+        </div>
+        <p id="overviewHint" class="overview-hint">Enter your class details to see your attendance health.</p>
+      </div>
+    </section>
+
+    <section id="calculator" class="panel calculator-panel glass-card">
+      <div class="panel-header">
+        <div>
+          <h2>Attendance Calculator</h2>
+          <p>Calculate your attendance and remaining leave allowance</p>
+        </div>
+      </div>
+
+      <form id="attendanceForm" class="calc-form" novalidate>
         <div class="input-grid">
-          <div class="field">
+          <div class="float-field">
+            <input type="number" id="totalClasses" name="totalClasses" inputmode="numeric" min="1" step="1" placeholder=" " autocomplete="off">
             <label for="totalClasses">Total Classes</label>
-            <input type="number" id="totalClasses" name="totalClasses" inputmode="numeric" min="1" step="1" placeholder="e.g. 100">
           </div>
-          <div class="field">
+          <div class="float-field">
+            <input type="number" id="absentClasses" name="absentClasses" inputmode="numeric" min="0" step="1" placeholder=" " autocomplete="off">
             <label for="absentClasses">Absent Classes</label>
-            <input type="number" id="absentClasses" name="absentClasses" inputmode="numeric" min="0" step="1" placeholder="e.g. 20">
           </div>
         </div>
-        <div class="actions">
-          <button type="button" id="calculateBtn" class="btn btn-primary">Calculate Attendance</button>
-          <button type="button" id="clearBtn" class="btn btn-secondary">Clear</button>
-        </div>
-        <p id="statusMessage" class="status-message" aria-live="polite"></p>
-      </section>
 
-      <section class="results-section" aria-label="Attendance results">
-        <div class="results-grid">
-          <article class="card">
-            <h2 class="card-label">Attended Classes</h2>
-            <p id="attendedResult" class="card-value">-</p>
-          </article>
-          <article class="card">
-            <h2 class="card-label">Absent Classes</h2>
-            <p id="absentResult" class="card-value">-</p>
-          </article>
-          <article class="card card-highlight">
-            <h2 class="card-label">Attendance Percentage</h2>
-            <p id="percentageResult" class="card-value percentage-value">-</p>
-          </article>
-          <article class="card">
-            <h2 class="card-label">Additional Leaves Allowed</h2>
-            <p id="leavesResult" class="card-value">-</p>
-          </article>
+        <div class="actions">
+          <button type="submit" id="calculateBtn" class="btn btn-primary">Calculate Attendance</button>
+          <button type="button" id="clearBtn" class="btn btn-secondary">Clear / Reset</button>
         </div>
-      </section>
+      </form>
+
+      <div id="messageArea" class="message-area" aria-live="polite"></div>
+    </section>
+
+    <section class="results-dashboard" id="resultsSection" aria-live="polite">
+      <div class="section-heading">
+        <h2>Results Dashboard</h2>
+        <p>Your attendance summary and allowance at a glance.</p>
+      </div>
+
+      <div class="results-grid">
+        <article class="result-card" style="--delay: 0ms">
+          <span class="result-label">Attended Classes</span>
+          <strong id="attendedResult" class="result-value">-</strong>
+        </article>
+        <article class="result-card" style="--delay: 60ms">
+          <span class="result-label">Absent Classes</span>
+          <strong id="absentResult" class="result-value">-</strong>
+        </article>
+        <article class="result-card focal" style="--delay: 120ms">
+          <span class="result-label">Attendance Percentage</span>
+          <strong id="percentageResult" class="result-value percentage">-</strong>
+        </article>
+        <article class="result-card" style="--delay: 180ms">
+          <span class="result-label">Remaining Leave Allowance</span>
+          <strong id="leavesResult" class="result-value">-</strong>
+        </article>
+      </div>
+
+      <div id="insightCard" class="insight-card hidden">
+        <div class="insight-icon" aria-hidden="true">i</div>
+        <div>
+          <h3>Smart Leave Insight</h3>
+          <p id="insightText"></p>
+        </div>
+      </div>
+
+      <p id="statusMessage" class="sr-status" aria-live="polite"></p>
+    </section>
+
+    <section id="about" class="about-section glass-card">
+      <h2>About Attendly</h2>
+      <p>Attendly is a simple, professional attendance companion designed to help students monitor attendance, stay above the 75% requirement, and make informed leave decisions with clarity.</p>
     </section>
   </main>
+
+  <footer class="footer">
+    <p>Attendly &middot; Student Attendance Productivity</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>
